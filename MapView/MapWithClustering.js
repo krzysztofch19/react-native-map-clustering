@@ -284,25 +284,25 @@ const inRange = (val, min, max) => ((val - min) * (val - max) < 0);
 
 const deltaToZoom = delta => Math.round(Math.log(360 / delta) / Math.LN2);
 
-const shouldClustersBeCalculated = (delta, previousDelta) => {
-  const minZoom = 3;
+const shouldClustersBeCalculated = delta => {
+  const minZoom = Platform.OS === 'android' ? 9 : 10;
 
   let currentZoom = deltaToZoom(delta);
-  let previousZoom = deltaToZoom(previousDelta);
-  
-  let calculateClusters = currentZoom <= minZoom ?
-                            true : previousZoom == currentZoom ? 
-                            false : true;
-  
+  let calculateClusters = false;
+
+  if(currentZoom <= minZoom){
+    calculateClusters =  true
+  }
+
   return calculateClusters;
 }
 
 const shouldMarkersBeClustered = delta => {
   const maxZoom = Platform.OS === 'android' ? 8 : 9;
-  let currentZoom = deltaToZoom(delta); 
+  let currentZoom = deltaToZoom(delta);
 
   let clusterMarkers = currentZoom >= maxZoom ? false : true;
-  
+
   return clusterMarkers;
 }
 
